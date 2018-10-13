@@ -12,7 +12,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author jobob
- * @since 2018-10-11
+ * @since 2018-10-12
  */
 public class Sections implements Serializable {
 
@@ -90,6 +90,8 @@ public class Sections implements Serializable {
     private Integer term;
 
     private String title;
+
+    private String classAttri;
 
     public Integer getId() {
         return id;
@@ -294,6 +296,13 @@ public class Sections implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
+    public String getClassAttri() {
+        return classAttri;
+    }
+
+    public void setClassAttri(String classAttri) {
+        this.classAttri = classAttri;
+    }
 
     @Override
     public String toString() {
@@ -327,6 +336,7 @@ public class Sections implements Serializable {
         ", courseNum=" + courseNum +
         ", term=" + term +
         ", title=" + title +
+        ", classAttri=" + classAttri +
         "}";
     }
 }

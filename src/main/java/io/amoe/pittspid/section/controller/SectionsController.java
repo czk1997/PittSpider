@@ -33,12 +33,8 @@ import java.time.format.DateTimeFormatter;
 @RequestMapping("/section")
 public class SectionsController {
     static final Logger logger = LoggerFactory.getLogger(SectionsController.class);
-
-
-
-    @GetMapping("/section")
+    @GetMapping("/list")
     public Sections getSection(@RequestParam int term,@RequestParam int classNum) {
-
         return getSectionDetail(term,classNum);
     }
 
@@ -78,7 +74,6 @@ public class SectionsController {
                 } else if (rowName.contains("class number")) {
                     section.setClassNum(Integer.parseInt(rowValue));
                 } else if (rowName.contains("career")) {
-                    System.out.println(e);
                     section.setCareer(rowValue);
                 } else if (rowName.contains("units")) {
                     section.setUnits(Integer.parseInt(rowValue.replaceAll("\\D", "")));
@@ -127,6 +122,9 @@ public class SectionsController {
                 }
                 else if (rowName.contains(("status"))){
                     section.setStatus(rowValue);
+                }
+                else if(rowName.contains("class attri")){
+                    section.setClassAttri(rowValue);
                 }
                 section.setTerm(term);
             }
