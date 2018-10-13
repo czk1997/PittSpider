@@ -55,15 +55,26 @@ public class ClassesController {
     @GetMapping("updateSubject")
     public void updateaSectionsForSubject(int term, String subject) {
         ArrayList<Courses> courses = getClassList(subject);
-        courses.forEach(item -> classesService.insert(item));
+        for (Courses cours : courses) {
+            try {
+                classesService.insert(cours);
+            }catch (Exception e){
+                logger.error(e.getMessage());
+            }
+        }
         for (Courses course : courses) {
-            CoursesController.getSections(term, course.getCourseNum(), "PIT/PGH").forEach(item -> sectionsService.insert(item));
+            try{
+                CoursesController.getSections(term, course.getCourseNum(), "PIT/PGH").forEach(item -> sectionsService.insert(item));
+            }
+           catch (Exception e){
+                logger.error(e.getMessage());
+           }
         }
 
     }
 
     @GetMapping("updateAllSubject")
-    public void updateAllSubject() {
+    public JSONObject updateAllSubject() {
         String SUBJECTS[] = {"ADMJ", "ADMPS", "AFRCNA", "AFROTC", "ANTH", "ARABIC", "ARTSC", "ASL", "ASTRON", "ATHLTR", "BACC", "BCHS",
                 "BECN", "BFAE", "BFIN", "BHRM", "BIND", "BIOENG", "BIOETH", "BIOINF", "BIOSC", "BIOST", "BMIS", "BMKT",
                 "BOAH", "BORG", "BQOM", "BSEO", "BSPP", "BUS", "BUSACC", "BUSADM", "BUSBIS", "BUSECN", "BUSENV", "BUSERV",
@@ -83,8 +94,13 @@ public class ClassesController {
                 "SOCWRK", "SPAN", "STAT", "SWAHIL", "SWBEH", "SWCED", "SWCOSA", "SWE", "SWGEN", "SWINT", "SWRES", "SWWEL",
                 "TELCOM", "THEA", "TURKSH", "UKRAIN", "URBNST", "VIET"};
         for (String s : SUBJECTS) {
-            updateaSectionsForSubject(2194, s);
+            new Thread(
+                    () -> updateaSectionsForSubject(2194, s)
+            ).start();
         }
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("status:",1);
+        return jsonObject;
     }
 
     @GetMapping("quickList")
