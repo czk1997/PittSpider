@@ -19,5 +19,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SectionsServiceImpl extends ServiceImpl<SectionsMapper, Sections> implements ISectionsService {
-
+    @Autowired
+    SectionsMapper sectionsMapper;
+    public void insert(Sections sections){
+        sectionsMapper.insert(sections);
+    }
 }

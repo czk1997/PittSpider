@@ -5,13 +5,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 //import io.amoe.pittspid.section.entity.Sections;
 //import io.amoe.pittspid.section.entity.Sections;
+import io.amoe.pittspid.course.service.impl.CoursesServiceImpl;
 import io.amoe.pittspid.section.entity.Sections;
+import io.amoe.pittspid.section.service.impl.SectionsServiceImpl;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -36,7 +39,17 @@ import static io.amoe.pittspid.section.controller.SectionsController.getSectionD
 @RestController
 @RequestMapping("/course")
 public class CoursesController {
-    final private Logger logger = LoggerFactory.getLogger(CoursesController.class);
+    final private static Logger logger = LoggerFactory.getLogger(CoursesController.class);
+    @Autowired
+    SectionsServiceImpl sectionsService;
+
+    @GetMapping("update")
+    public ArrayList<Sections> update(int term, int courseNum, String campusId) {
+        ArrayList<Sections> result = getSections(term, courseNum, campusId);
+        result.forEach(item -> item.setCourseNum(courseNum));
+        result.forEach(item -> sectionsService.insert(item));
+        return result;
+    }
 
     @GetMapping("sectionList")
     public ArrayList sectionList(@RequestParam int term, @RequestParam int courseNum, @RequestParam String campusId) {
@@ -44,9 +57,10 @@ public class CoursesController {
     }
 
     public static ArrayList<Sections> getSections(int term, int courseNum, String campusId) {
+        logger.info("Get Sections for term=" + term + ", courseNum=" + courseNum + ", campusId" + campusId);
         ArrayList<Sections> secs = new ArrayList<>();
         String url = "https://psmobile.pitt.edu/app/catalog/listsections/UPITT/" + term + "/" + courseNum + "/" + campusId;
-        System.out.println(url);
+
         try {
             Document document = Jsoup.connect(url).get();
             Pattern p = Pattern.compile("https://psmobile.pitt.edu/app/catalog/classsection/UPITT/");

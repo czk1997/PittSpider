@@ -33,6 +33,8 @@ import java.time.format.DateTimeFormatter;
 @RequestMapping("/section")
 public class SectionsController {
     static final Logger logger = LoggerFactory.getLogger(SectionsController.class);
+
+
     @GetMapping("/list")
     public Sections getSection(@RequestParam int term,@RequestParam int classNum) {
         return getSectionDetail(term,classNum);
